@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en" style="scroll-behavior: smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Safeeyes Jeweler offers secure business management software with features like zakat calculation, inventory tracking, and user management."
+    />
+    <meta
+      name="keywords"
+      content="business management, zakat calculator, inventory software, Safeeyes Jeweler"
+    />
+    <meta
+      property="og:title"
+      content="Safeeyes Jeweler - Secure Business Management"
+    />
+    <meta
+      property="og:description"
+      content="Manage your business with Safeeyes' powerful software solutions."
+    />
+    <meta
+      property="og:image"
+      content="https://safeeyesjewelers.com/public/frontend/images/safeeyes.png"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/alpinejs" defer></script>
+    <title>Safeeyes Jeweler</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      href="https://safeeyesjewelers.com/public/frontend/images/safeeyes.png"
+    />
+    <style>
+      [x-cloak] {
+        display: none;
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+      }
+    </style>
+  </head>
+
+  <body class="bg-gradient-to-br from-cyan-50 to-white text-gray-800">
+    <!-- Header -->
+    <header>
+      <nav
+        class="w-full bg-white px-6 py-4 shadow-md rounded-xl sticky top-0 z-50"
+        x-data="{
+          open: false,
+          isFixed: false,
+          isHomeActive: true,
+          isServiceActive: false,
+          isContactActive: false
+        }"
+        x-init="
+  let timeout;
+  window.addEventListener('scroll', () => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      isFixed = window.scrollY > 0;
+      const homeSection = document.getElementById('home');
+      const servicesSection = document.getElementById('services');
+      const contactSection = document.getElementById('contact');
+
+      const servicesTop = servicesSection ? servicesSection.getBoundingClientRect().top : Infinity;
+      const contactTop = contactSection ? contactSection.getBoundingClientRect().top : Infinity;
+      const homeTop = homeSection ? homeSection.getBoundingClientRect().top : Infinity;
+
+      isHomeActive = window.scrollY < 50 || (homeTop <= 0 && servicesTop > 0);
+      isServiceActive = servicesTop <= 0 && contactTop > 0;
+      isContactActive = contactTop <= 0;
+
+      if (isServiceActive) { isHomeActive = false; isContactActive = false; }
+      if (isContactActive) { isHomeActive = false; isServiceActive = false; }
+      if (isHomeActive) { isServiceActive = false; isContactActive = false; }
+    }, 10);
+  });
+"
+        :class="{ 'fixed w-full': isFixed, 'sticky': !isFixed }"
+      >
+        <div class="w-[94%] mx-auto flex items-center justify-between">
+          <!-- Logo -->
+          <div class="flex items-center space-x-3">
+            <img
+              src="https://safeeyesjewelers.com/public/frontend/images/safeeyes.png"
+              alt="Safeeyes Jeweler logo"
+              class="w-12 h-12 object-contain"
+              loading="lazy"
+            />
+            <span class="text-xl font-bold text-sky-800 hidden sm:inline"
+              >Safeeyes</span
+            >
+          </div>
+
+          <!-- Desktop Menu -->
+          <div class="hidden md:flex items-center space-x-6">
+            <a
+              href="#home"
+              class="text-sm font-semibold px-4 py-1.5 rounded-full transition"
+              :class="isHomeActive ? 'bg-sky-800 text-white' : 'border border-sky-800 text-sky-800 hover:bg-sky-800 hover:text-white'"
+              >Home</a
+            >
+            <a
+              href="#services"
+              class="text-sm font-semibold px-4 py-1.5 rounded-full transition"
+              :class="isServiceActive ? 'bg-sky-800 text-white' : 'border border-sky-800 text-sky-800 hover:bg-sky-800 hover:text-white'"
+              >Service</a
+            >
+            <a
+              href="#contact"
+              class="text-sm font-semibold px-4 py-1.5 rounded-full transition"
+              :class="isContactActive ? 'bg-sky-800 text-white' : 'border border-sky-800 text-sky-800 hover:bg-sky-800 hover:text-white'"
+              >Contact</a
+            >
+            <a
+              href="/blog"
+              class="text-sm font-semibold border border-sky-800 text-sky-800 px-4 py-1.5 rounded-full hover:bg-sky-800 hover:text-white transition"
+              >Blog</a
+            >
+          </div>
+
+          <!-- Login Button -->
+          <div class="hidden md:block">
+            <a
+              href="/login"
+              class="bg-sky-700 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-sky-900 transition"
+              >Login</a
+            >
+          </div>
+
+          <!-- Mobile Toggle -->
+          <button
+            @click="open = !open"
+            class="md:hidden focus:outline-none"
+            aria-label="Toggle mobile menu"
+            x-bind:aria-expanded="open"
+          >
+            <svg
+              class="w-7 h-7 text-sky-900"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div
+          x-show="open"
+          x-transition
+          x-cloak
+          class="md:hidden mt-4 bg-white rounded-lg p-4 space-y-3 shadow-md"
+        >
+          <a
+            href="/"
+            class="block font-medium px-4 py-2 rounded-full transition"
+            :class="isHomeActive ? 'bg-sky-800 text-white' : 'text-sky-800 hover:bg-sky-100'"
+            >Home</a
+          >
+          <a
+            href="#services"
+            class="block font-medium px-4 py-2 rounded-full transition"
+            :class="isServiceActive ? 'bg-sky-800 text-white' : 'text-sky-800 hover:bg-sky-100'"
+            >Service</a
+          >
+          <a
+            href="#contact"
+            class="block font-medium px-4 py-2 rounded-full transition"
+            :class="isContactActive ? 'bg-sky-800 text-white' : 'text-sky-800 hover:bg-sky-100'"
+            >Contact</a
+          >
+          <a
+            href="/blog"
+            class="block font-medium text-sky-800 px-4 py-2 rounded-full hover:bg-sky-100 transition"
+            >Blog</a
+          >
+          <a
+            href="/login"
+            class="block bg-sky-900 text-white px-5 py-2 rounded-full text-sm font-medium text-center hover:bg-sky-800 transition"
+            >Login</a
+          >
+        </div>
+      </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section
+      id="home"
+      class="bg-gradient-to-br from-cyan-50 to-white py-20 px-4"
+    >
+      <div class="max-w-7xl mx-auto rounded-3xl p-8 md:p-16 shadow-lg bg-white">
+        <div class="grid md:grid-cols-2 gap-16 items-center">
+          <!-- Text -->
+          <div class="p-4">
+            <h1
+              class="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight"
+            >
+              Your Security is Our
+              <span class="block text-sky-800">Top Priority</span>
+            </h1>
+            <p class="text-lg text-gray-700 leading-relaxed">
+              Manage your business with ease using our software, offering
+              features like user management, zakat calculation, attendance
+              tracking, inventory management, and branch coordination—all in one
+              powerful solution.
+            </p>
+          </div>
+
+          <!-- Image -->
+          <div class="group overflow-hidden rounded-2xl shadow-xl">
+            <img
+              src="./images/ChatGPT Image May 10, 2025, 03_20_10 PM.png"
+              alt="Safeeyes business management software banner"
+              class="w-full h-96 rounded-2xl transition-transform duration-500 transform group-hover:scale-105"
+              loading="lazy"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="border-t-2 border-gray-200" />
+
+    <!-- Services Section -->
+    <section id="services" class="max-w-7xl mx-auto px-6 py-20">
+      <p class="text-center text-5xl font-bold text-blue-900 mb-8">Services</p>
+      <div class="text-center mb-16">
+        <h2 class="text-4xl font-extrabold text-sky-900 leading-snug">
+          How <span class="text-sky-600">We Help You</span>
+        </h2>
+        <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+          Powerful features to manage people, processes, inventory, finances,
+          and more—efficiently and effortlessly.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div
+          class="bg-[#0C476C] p-6 rounded-2xl shadow-lg border border-sky-100 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300"
+        >
+          <a href="./services.html" class="flex items-start gap-4">
+            <img
+              src="https://safeeyesjewelers.com/public/frontend/images/SEO.png"
+              class="w-12 h-12"
+              alt="Zakat calculation icon"
+              loading="lazy"
+            />
+            <div>
+              <h3 class="text-xl font-semibold text-white">Zakat</h3>
+              <p class="mt-2 text-sm text-white">
+                Monitor income, calculate zakat, and get insights by branch to
+                ensure compliance and transparency.
+              </p>
+            </div>
+          </a>
+        </div>
+
+        <div
+          class="bg-[#0C476C] p-6 rounded-2xl shadow-lg border border-sky-100 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300"
+        >
+          <a href="./services.html" class="flex items-start gap-4">
+            <img
+              src="https://safeeyesjewelers.com/public/frontend/images/SEO.png"
+              class="w-12 h-12"
+              alt="Attendance tracking icon"
+              loading="lazy"
+            />
+            <div>
+              <h3 class="text-xl font-semibold text-white">Attendance</h3>
+              <p class="mt-2 text-sm text-white">
+                Log work hours, breaks, and shifts accurately with just one
+                click, boosting productivity and reporting.
+              </p>
+            </div>
+          </a>
+        </div>
+
+        <div
+          class="bg-[#0C476C] p-6 rounded-2xl shadow-lg border border-sky-100 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300"
+        >
+          <a href="./services.html" class="flex items-start gap-4">
+            <img
+              src="https://safeeyesjewelers.com/public/frontend/images/SEO.png"
+              class="w-12 h-12"
+              alt="Inventory categories icon"
+              loading="lazy"
+            />
+            <div>
+              <h3 class="text-xl font-semibold text-white">
+                Inventory Categories
+              </h3>
+              <p class="mt-2 text-sm text-white">
+                Group and manage items by type, date, or user to keep your
+                inventory organized and easy to track.
+              </p>
+            </div>
+          </a>
+        </div>
+
+        <div
+          class="bg-[#0C476C] p-6 rounded-2xl shadow-lg border border-sky-100 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300"
+        >
+          <a href="./services.html" class="flex items-start gap-4">
+            <img
+              src="https://safeeyesjewelers.com/public/frontend/images/SEO.png"
+              class="w-12 h-12"
+              alt="Inventories tracking icon"
+              loading="lazy"
+            />
+            <div>
+              <h3 class="text-xl font-semibold text-white">Inventories</h3>
+              <p class="mt-2 text-sm text-white">
+                Track products with IDs, assign them to branches, and control
+                who can view or edit each item.
+              </p>
+            </div>
+          </a>
+        </div>
+
+        <div
+          class="bg-[#0C476C] p-6 rounded-2xl shadow-lg border border-sky-100 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300"
+        >
+          <a href="./services.html" class="flex items-start gap-4">
+            <img
+              src="https://safeeyesjewelers.com/public/frontend/images/SEO.png"
+              class="w-12 h-12"
+              alt="Branches management icon"
+              loading="lazy"
+            />
+            <div>
+              <h3 class="text-xl font-semibold text-white">Branches</h3>
+              <p class="mt-2 text-sm text-white">
+                Manage multiple branches with name, location, ID, and creation
+                dates—all in one central dashboard.
+              </p>
+            </div>
+          </a>
+        </div>
+
+        <div
+          class="bg-[#0C476C] p-6 rounded-2xl shadow-lg border border-sky-100 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300"
+        >
+          <a href="./services.html" class="flex items-start gap-4">
+            <img
+              src="https://safeeyesjewelers.com/public/frontend/images/SEO.png"
+              class="w-12 h-12"
+              alt="User management icon"
+              loading="lazy"
+            />
+            <div>
+              <h3 class="text-xl font-semibold text-white">User Management</h3>
+              <p class="mt-2 text-sm text-white">
+                Add, edit, and remove users while tracking profiles, emails, and
+                their branch assignments.
+              </p>
+            </div>
+          </a>
+        </div>
+
+        <div
+          class="bg-[#0C476C] p-6 rounded-2xl shadow-lg border border-sky-100 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300"
+        >
+          <a href="./services.html" class="flex items-start gap-4">
+            <img
+              src="https://safeeyesjewelers.com/public/frontend/images/SEO.png"
+              class="w-12 h-12"
+              alt="Profit and loss icon"
+              loading="lazy"
+            />
+            <div>
+              <h3 class="text-xl font-semibold text-white">Profit & Loss</h3>
+              <p class="mt-2 text-sm text-white">
+                Track revenue and expenses, view reports, and get financial
+                forecasts to plan business growth.
+              </p>
+            </div>
+          </a>
+        </div>
+
+        <div
+          class="bg-[#0C476C] p-6 rounded-2xl shadow-lg border border-sky-100 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300"
+        >
+          <a href="./services.html" class="flex items-start gap-4">
+            <img
+              src="https://safeeyesjewelers.com/public/frontend/images/SEO.png"
+              class="w-12 h-12"
+              alt="Custom invoices icon"
+              loading="lazy"
+            />
+            <div>
+              <h3 class="text-xl font-semibold text-white">Custom Invoices</h3>
+              <p class="mt-2 text-sm text-white">
+                Create branded, detailed invoices with auto-calculated weights
+                to simplify billing and payments.
+              </p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <hr class="border-t-2 border-gray-200" />
+
+    <!-- Contact Section -->
+    <section
+      id="contact"
+      class="max-w-7xl mx-auto px-4 sm:px-6 py-20 sm:py-24 bg-gradient-to-br from-sky-50 to-white"
+    >
+      <div class="max-w-5xl mx-auto">
+        <h2
+          class="text-3xl sm:text-5xl font-bold mb-6 text-center text-blue-900"
+        >
+          CONTACT US
+        </h2>
+        <p
+          class="text-center mb-10 sm:mb-12 text-gray-600 text-base sm:text-lg"
+        >
+          If you have any questions or concerns, please don’t hesitate to
+          contact us. We’re always here to help.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 sm:gap-12">
+          <!-- Contact Form -->
+          <div
+            class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl border border-gray-200"
+          >
+            <form action="#" method="POST" class="space-y-5">
+              <div>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  required
+                  class="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  placeholder="Your Name"
+                />
+              </div>
+              <div>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  class="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  placeholder="Your Email"
+                />
+              </div>
+              <div>
+                <textarea
+                  id="message"
+                  name="message"
+                  rows="4"
+                  required
+                  class="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  placeholder="Type your message..."
+                ></textarea>
+              </div>
+              <button
+                type="submit"
+                class="w-full sm:w-auto bg-sky-800 hover:bg-sky-700 text-white px-6 py-3 rounded-full font-semibold transition duration-300"
+              >
+                SEND MESSAGE
+              </button>
+            </form>
+          </div>
+
+          <!-- Contact Info -->
+          <div
+            class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl border border-gray-200 flex flex-col justify-between"
+          >
+            <div class="space-y-6 text-gray-700">
+              <p class="flex items-center text-base sm:text-2xl">
+                <span class="mr-2 text-sky-600">@</span>
+                <a
+                  href="mailto:Safeeyestrading@gmail.com"
+                  class="hover:underline"
+                  >Safeeyestrading@gmail.com</a
+                >
+              </p>
+              <p class="flex items-center text-base sm:text-2xl">
+                <span class="mr-2 text-sky-600">📞</span>
+                <a href="tel:+966576650902" class="hover:underline"
+                  >+966 57 665 0902</a
+                >
+              </p>
+              <p class="flex items-center text-base sm:text-2xl">
+                <span class="mr-2 text-sky-600">📍</span> Riyadh, Saudi Arabia
+              </p>
+            </div>
+
+            <div class="mt-8 sm:mt-10 flex flex-wrap gap-4">
+              <a
+                href="#"
+                target="_blank"
+                class="w-10 h-10 sm:w-12 sm:h-12 bg-sky-100 text-sky-800 rounded-full flex items-center justify-center text-lg sm:text-xl hover:bg-sky-800 hover:text-white transition"
+              >
+                <i class="bi bi-facebook"></i>
+              </a>
+              <a
+                href="#"
+                target="_blank"
+                class="w-10 h-10 sm:w-12 sm:h-12 bg-sky-100 text-sky-800 rounded-full flex items-center justify-center text-lg sm:text-xl hover:bg-sky-800 hover:text-white transition"
+              >
+                <i class="bi bi-instagram"></i>
+              </a>
+              <a
+                href="#"
+                target="_blank"
+                class="w-10 h-10 sm:w-12 sm:h-12 bg-sky-100 text-sky-800 rounded-full flex items-center justify-center text-lg sm:text-xl hover:bg-sky-800 hover:text-white transition"
+              >
+                <i class="bi bi-linkedin"></i>
+              </a>
+              <a
+                href="#"
+                target="_blank"
+                class="w-10 h-10 sm:w-12 sm:h-12 bg-sky-100 text-sky-800 rounded-full flex items-center justify-center text-lg sm:text-xl hover:bg-sky-800 hover:text-white transition"
+              >
+                <i class="bi bi-youtube"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer
+      id="contact"
+      class="bg-gradient-to-br from-cyan-100 to-white pt-12 px-6"
+    >
+      <div
+        class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 text-gray-700"
+      >
+        <!-- Brand -->
+        <div>
+          <div class="flex gap-3">
+            <img
+              src="./images/safeeyes.png"
+              alt="Safeeyes Jeweler logo"
+              class="w-10 h-10 object-contain"
+              loading="lazy"
+            />
+            <h3 class="text-3xl font-bold text-sky-900 mb-4">Safeeyes</h3>
+          </div>
+          <p class="mb-2">A108 Adam Street</p>
+          <p class="mb-2">Riyadh, Saudi Arabia</p>
+          <p class="mb-2">
+            Phone:
+            <a href="tel:+966576650902" class="text-sky-700 hover:underline"
+              >+966 57 665 0902</a
+            >
+          </p>
+          <p>
+            Email:
+            <a
+              href="mailto:Safeeyestrading@gmail.com"
+              class="text-sky-700 hover:underline"
+              >Safeeyestrading@gmail.com</a
+            >
+          </p>
+        </div>
+
+        <!-- Useful Links -->
+        <div>
+          <h4 class="text-lg font-semibold text-sky-900 mb-4">Useful Links</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-sky-700 hover:underline">Home</a></li>
+            <li>
+              <a href="#services" class="text-sky-700 hover:underline"
+                >Service</a
+              >
+            </li>
+            <li>
+              <a href="#contact" class="text-sky-700 hover:underline"
+                >Contact</a
+              >
+            </li>
+            <li>
+              <a href="/terms" class="text-sky-700 hover:underline"
+                >Terms of Service</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <!-- Our Services -->
+        <div>
+          <h4 class="text-lg font-semibold text-sky-900 mb-4">Our Services</h4>
+          <!-- <ul class="space-y-2">
+            <li>
+              <a href="#" class="text-sky-700 hover:underline">Web Design</a>
+            </li>
+            <li>
+              <a href="#" class="text-sky-700 hover:underline"
+                >Web Development</a
+              >
+            </li>
+            <li>
+              <a href="#" class="text-sky-700 hover:underline"
+                >Product Management</a
+              >
+            </li>
+            <li>
+              <a href="#" class="text-sky-700 hover:underline">Marketing</a>
+            </li>
+          </ul> -->
+        </div>
+
+        <!-- Follow Us -->
+        <div>
+          <h4 class="text-lg font-semibold text-sky-900 mb-4">Follow Us</h4>
+          <p class="mb-4">Stay connected with us on social media.</p>
+          <div class="mt-10 flex space-x-4">
+            <a
+              href="#"
+              target="_blank"
+              class="w-12 h-12 bg-sky-100 text-sky-800 rounded-full flex items-center justify-center text-xl hover:bg-sky-800 hover:text-white transition"
+            >
+              <i class="bi bi-facebook"></i>
+            </a>
+            <a
+              href="#"
+              target="_blank"
+              class="w-12 h-12 bg-sky-100 text-sky-800 rounded-full flex items-center justify-center text-xl hover:bg-sky-800 hover:text-white transition"
+            >
+              <i class="bi bi-instagram"></i>
+            </a>
+            <a
+              href="#"
+              target="_blank"
+              class="w-12 h-12 bg-sky-100 text-sky-800 rounded-full flex items-center justify-center text-xl hover:bg-sky-800 hover:text-white transition"
+            >
+              <i class="bi bi-linkedin"></i>
+            </a>
+            <a
+              href="#"
+              target="_blank"
+              class="w-12 h-12 bg-sky-100 text-sky-800 rounded-full flex items-center justify-center text-xl hover:bg-sky-800 hover:text-white transition"
+            >
+              <i class="bi bi-youtube"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      <hr class="border-t-2 border-gray-200 my-6" />
+      <p class="text-center text-gray-600 text-sm pb-6">
+        © 2025 Safeeyes Jeweler. All rights reserved.
+      </p>
+    </footer>
+  </body>
+</html>

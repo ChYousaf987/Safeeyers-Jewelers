@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Safeeyes Jeweler offers secure business management software with features like zakat calculation, inventory tracking, and user management."
+    />
+    <meta
+      name="keywords"
+      content="business management, zakat calculator, inventory software, Safeeyes Jeweler"
+    />
+    <meta
+      property="og:title"
+      content="Safeeyes Jeweler - Secure Business Management"
+    />
+    <meta
+      property="og:description"
+      content="Manage your business with Safeeyes' powerful software solutions."
+    />
+    <meta
+      property="og:image"
+      content="https://safeeyesjewelers.com/public/frontend/images/safeeyes.png"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/alpinejs" defer></script>
+    <title>Services</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      href="https://safeeyesjewelers.com/public/frontend/images/safeeyes.png"
+    />
+    <style>
+      [x-cloak] {
+        display: none;
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-gradient-to-br from-cyan-50 to-white text-gray-800">
+    <header>
+      <nav
+        class="w-full bg-white px-6 py-4 shadow-md rounded-xl sticky top-0 z-50"
+        x-data="{
+          open: false,
+          isFixed: false,
+          isHomeActive: true,
+          isServiceActive: false,
+          isContactActive: false
+        }"
+        x-init="
+  let timeout;
+  window.addEventListener('scroll', () => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      isFixed = window.scrollY > 0;
+      const homeSection = document.getElementById('home');
+      const servicesSection = document.getElementById('services');
+      const contactSection = document.getElementById('contact');
+
+      const servicesTop = servicesSection ? servicesSection.getBoundingClientRect().top : Infinity;
+      const contactTop = contactSection ? contactSection.getBoundingClientRect().top : Infinity;
+      const homeTop = homeSection ? homeSection.getBoundingClientRect().top : Infinity;
+
+      isHomeActive = window.scrollY < 50 || (homeTop <= 0 && servicesTop > 0);
+      isServiceActive = servicesTop <= 0 && contactTop > 0;
+      isContactActive = contactTop <= 0;
+
+      if (isServiceActive) { isHomeActive = false; isContactActive = false; }
+      if (isContactActive) { isHomeActive = false; isServiceActive = false; }
+      if (isHomeActive) { isServiceActive = false; isContactActive = false; }
+    }, 10);
+  });
+"
+        :class="{ 'fixed w-full': isFixed, 'sticky': !isFixed }"
+      >
+        <div class="w-[94%] mx-auto flex items-center justify-between">
+          <!-- Logo -->
+          <div class="flex items-center space-x-3">
+            <img
+              src="https://safeeyesjewelers.com/public/frontend/images/safeeyes.png"
+              alt="Safeeyes Jeweler logo"
+              class="w-12 h-12 object-contain"
+              loading="lazy"
+            />
+            <span class="text-xl font-bold text-sky-800 hidden sm:inline"
+              >Safeeyes</span
+            >
+          </div>
+
+          <!-- Desktop Menu -->
+          <div class="hidden md:flex items-center space-x-6">
+            <a
+              href="#home"
+              class="text-sm font-semibold px-4 py-1.5 rounded-full transition"
+              :class="isHomeActive ? 'bg-sky-800 text-white' : 'border border-sky-800 text-sky-800 hover:bg-sky-800 hover:text-white'"
+              >Home</a
+            >
+            <a
+              href="#services"
+              class="text-sm font-semibold px-4 py-1.5 rounded-full transition"
+              :class="isServiceActive ? 'bg-sky-800 text-white' : 'border border-sky-800 text-sky-800 hover:bg-sky-800 hover:text-white'"
+              >Service</a
+            >
+            <a
+              href="#contact"
+              class="text-sm font-semibold px-4 py-1.5 rounded-full transition"
+              :class="isContactActive ? 'bg-sky-800 text-white' : 'border border-sky-800 text-sky-800 hover:bg-sky-800 hover:text-white'"
+              >Contact</a
+            >
+            <a
+              href="/blog"
+              class="text-sm font-semibold border border-sky-800 text-sky-800 px-4 py-1.5 rounded-full hover:bg-sky-800 hover:text-white transition"
+              >Blog</a
+            >
+          </div>
+
+          <!-- Login Button -->
+          <div class="hidden md:block">
+            <a
+              href="/login"
+              class="bg-sky-700 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-sky-900 transition"
+              >Login</a
+            >
+          </div>
+
+          <!-- Mobile Toggle -->
+          <button
+            @click="open = !open"
+            class="md:hidden focus:outline-none"
+            aria-label="Toggle mobile menu"
+            x-bind:aria-expanded="open"
+          >
+            <svg
+              class="w-7 h-7 text-sky-900"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div
+          x-show="open"
+          x-transition
+          x-cloak
+          class="md:hidden mt-4 bg-white rounded-lg p-4 space-y-3 shadow-md"
+        >
+          <a
+            href="/"
+            class="block font-medium px-4 py-2 rounded-full transition"
+            :class="isHomeActive ? 'bg-sky-800 text-white' : 'text-sky-800 hover:bg-sky-100'"
+            >Home</a
+          >
+          <a
+            href="#services"
+            class="block font-medium px-4 py-2 rounded-full transition"
+            :class="isServiceActive ? 'bg-sky-800 text-white' : 'text-sky-800 hover:bg-sky-100'"
+            >Service</a
+          >
+          <a
+            href="#contact"
+            class="block font-medium px-4 py-2 rounded-full transition"
+            :class="isContactActive ? 'bg-sky-800 text-white' : 'text-sky-800 hover:bg-sky-100'"
+            >Contact</a
+          >
+          <a
+            href="/blog"
+            class="block font-medium text-sky-800 px-4 py-2 rounded-full hover:bg-sky-100 transition"
+            >Blog</a
+          >
+          <a
+            href="/login"
+            class="block bg-sky-900 text-white px-5 py-2 rounded-full text-sm font-medium text-center hover:bg-sky-800 transition"
+            >Login</a
+          >
+        </div>
+      </nav>
+    </header>
+
+    <section class="max-w-7xl mx-auto px-6 py-10">
+      <p class="text-center text-5xl font-bold text-blue-900 mb-8">
+        Services Detail
+      </p>
+
+      <div
+        class="max-w-5xl mx-auto bg-[#0a3b52] text-white px-6 py-10 sm:px-10 rounded-t-3xl rounded-b-3xl max-w-7xl mx-auto"
+      >
+        <h2 class="text-3xl md:text-5xl font-bold text-center mb-10">Zakat</h2>
+        <p
+          class="text-base leading-relaxed text-justify space-y-4 text-sky-100"
+        >
+          The Zakat functionality in a company's software provides an essential
+          tool for calculating and managing zakat payments with ease and
+          accuracy. Zakat, an obligatory charity in Islam, requires Muslims to
+          donate a portion of their wealth to the needy. This feature is
+          designed to simplify the calculation process, streamline
+          record-keeping, and allow efficient monitoring of zakat obligations
+          for businesses with multiple branches or departments. At its core, the
+          zakat function has several key components: tracking the zakat year,
+          monitoring total income, calculating total zakat owed, and keeping a
+          record of payment statuses. Users can toggle the status of the zakat
+          payments between “paid” and “unpaid,” ensuring that they can easily
+          track which payments have been made and which are still pending. This
+          transparency helps businesses stay compliant with their religious
+          obligations while also making the process more straightforward for
+          financial managers.
+
+          <br /><br /><strong>Core Features</strong><br />
+          <strong>1. Zakat Year Tracking</strong> One of the foundational
+          features of this software is the ability to track the zakat year.
+          Since zakat must be calculated annually based on a lunar calendar
+          (Hijri year), keeping track of the exact zakat year is crucial. The
+          system automatically calculates the next zakat due date by taking the
+          zakat year into account, ensuring businesses are always up to date
+          with their obligations. This eliminates the need for manual tracking,
+          reducing errors and increasing efficiency.
+
+          <br /><br /><strong>2. Total Income Monitoring</strong> The software
+          tracks the total income of the business throughout the zakat year,
+          providing a detailed summary of all financial inflows that will be
+          relevant for zakat calculation. Whether the income is derived from
+          sales, investments, or other streams, the system consolidates this
+          data, giving users a comprehensive view of the wealth accumulated
+          during the zakat year. By having a clear breakdown of total income,
+          users can ensure that their zakat calculations are based on accurate,
+          up-to-date information.
+
+          <br /><br /><strong>3. Total Zakat Calculation</strong> Zakat is
+          generally calculated as 2.5% of a person's or business’s qualifying
+          wealth. The software calculates the total zakat based on the total
+          income figures, automatically applying the appropriate zakat
+          percentage to derive the total amount owed. Users no longer have to
+          rely on manual calculations, reducing the risk of mistakes. This
+          automated calculation ensures that businesses always know exactly how
+          much zakat they need to pay, simplifying the overall process.
+
+          <br /><br /><strong>4. Payment Status Management</strong> An essential
+          feature of this zakat function is the ability to manage payment
+          statuses. Users can easily update the status of their zakat payments,
+          toggling between “paid” and “unpaid” with just a few clicks. This
+          feature provides real-time tracking of payments, allowing financial
+          managers to ensure that all payments have been fulfilled before the
+          zakat year ends. Additionally, if a payment needs to be adjusted or
+          reversed, users can quickly change the status back to “unpaid,”
+          offering flexibility for any needed modifications.
+
+          <br /><br /><strong>Branch Details for Zakat Year</strong> For
+          businesses with multiple branches, the zakat function includes a
+          detailed view of branch-specific zakat information for each year. Each
+          branch’s name, total inventory, total price, and zakat details are
+          displayed in an organized manner. This ensures that users can manage
+          zakat payments for individual branches without confusion.
+
+          <br /><br /><strong>Branch Name:</strong> The software lists each
+          branch by name, making it easy for users to identify and review the
+          specific branch details.
+
+          <br /><br /><strong>Total Inventory and Price:</strong> The system
+          tracks the total inventory and associated value for each branch. This
+          information is crucial, as the value of stock or goods held by the
+          business may be included in the zakat calculation, depending on the
+          business's specific circumstances. By having these figures clearly
+          listed, businesses can ensure they are calculating zakat on all
+          qualifying assets.
+
+          <br /><br /><strong>Branch Zakat:</strong> Finally, the total zakat
+          amount for each branch is calculated and displayed. This helps
+          financial managers track each branch’s obligations separately,
+          providing a detailed overview of how much zakat needs to be paid for
+          the business as a whole.
+
+          <br /><br /><strong>Conclusion</strong> The zakat function provides an
+          all-encompassing solution for businesses that need to track and manage
+          zakat payments across multiple branches. Its comprehensive tracking of
+          income, automatic zakat calculations, and the ability to manage
+          payment statuses ensure that businesses can meet their zakat
+          obligations efficiently and with minimal effort. By offering
+          branch-level details, it provides businesses with the flexibility to
+          manage zakat at a granular level, ensuring compliance and accuracy in
+          zakat payment.
+        </p>
+
+        <div class="text-center mt-10">
+          <a
+            href="#"
+            class="inline-block bg-white text-[#0a3b52] font-semibold px-6 py-3 rounded-full shadow hover:bg-sky-100 transition"
+          >
+            Buy Now!
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <footer
+      id="contact"
+      class="bg-gradient-to-br from-cyan-100 to-white pt-12 px-6"
+    >
+      <div
+        class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 text-gray-700"
+      >
+        <!-- Brand -->
+        <div>
+          <div class="flex gap-3">
+            <img
+              src="./images/safeeyes.png"
+              alt="Safeeyes Jeweler logo"
+              class="w-10 h-10 object-contain"
+              loading="lazy"
+            />
+            <h3 class="text-3xl font-bold text-sky-900 mb-4">Safeeyes</h3>
+          </div>
+          <p class="mb-2">A108 Adam Street</p>
+          <p class="mb-2">Riyadh, Saudi Arabia</p>
+          <p class="mb-2">
+            Phone:
+            <a href="tel:+966576650902" class="text-sky-700 hover:underline"
+              >+966 57 665 0902</a
+            >
+          </p>
+          <p>
+            Email:
+            <a
+              href="mailto:Safeeyestrading@gmail.com"
+              class="text-sky-700 hover:underline"
+              >Safeeyestrading@gmail.com</a
+            >
+          </p>
+        </div>
+
+        <!-- Useful Links -->
+        <div>
+          <h4 class="text-lg font-semibold text-sky-900 mb-4">Useful Links</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-sky-700 hover:underline">Home</a></li>
+            <li>
+              <a href="/about" class="text-sky-700 hover:underline">Service</a>
+            </li>
+            <li>
+              <a href="#services" class="text-sky-700 hover:underline"
+                >Contact</a
+              >
+            </li>
+            <li>
+              <a href="/terms" class="text-sky-700 hover:underline"
+                >Terms of Service</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <!-- Our Services -->
+        <div>
+          <h4 class="text-lg font-semibold text-sky-900 mb-4">Our Services</h4>
+          <!-- <ul class="space-y-2">
+            <li>
+              <a href="#" class="text-sky-700 hover:underline">Web Design</a>
+            </li>
+            <li>
+              <a href="#" class="text-sky-700 hover:underline"
+                >Web Development</a
+              >
+            </li>
+            <li>
+              <a href="#" class="text-sky-700 hover:underline"
+                >Product Management</a
+              >
+            </li>
+            <li>
+              <a href="#" class="text-sky-700 hover:underline">Marketing</a>
+            </li>
+          </ul> -->
+        </div>
+
+        <!-- Follow Us -->
+        <div>
+          <h4 class="text-lg font-semibold text-sky-900 mb-4">Follow Us</h4>
+          <p class="mb-4">Stay connected with us on social media.</p>
+          <div class="mt-10 flex space-x-4">
+            <a
+              href="#"
+              target="_blank"
+              class="w-12 h-12 bg-sky-100 text-sky-800 rounded-full flex items-center justify-center text-xl hover:bg-sky-800 hover:text-white transition"
+            >
+              <i class="bi bi-facebook"></i>
+            </a>
+            <a
+              href="#"
+              target="_blank"
+              class="w-12 h-12 bg-sky-100 text-sky-800 rounded-full flex items-center justify-center text-xl hover:bg-sky-800 hover:text-white transition"
+            >
+              <i class="bi bi-instagram"></i>
+            </a>
+            <a
+              href="#"
+              target="_blank"
+              class="w-12 h-12 bg-sky-100 text-sky-800 rounded-full flex items-center justify-center text-xl hover:bg-sky-800 hover:text-white transition"
+            >
+              <i class="bi bi-linkedin"></i>
+            </a>
+            <a
+              href="#"
+              target="_blank"
+              class="w-12 h-12 bg-sky-100 text-sky-800 rounded-full flex items-center justify-center text-xl hover:bg-sky-800 hover:text-white transition"
+            >
+              <i class="bi bi-youtube"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      <hr class="border-t-2 border-gray-200 my-6" />
+      <p class="text-center text-gray-600 text-sm pb-6">
+        © 2025 Safeeyes Jeweler. All rights reserved.
+      </p>
+    </footer>
+  </body>
+</html>
